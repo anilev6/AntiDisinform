@@ -30,12 +30,17 @@ def get_search_results_serp(search_engine, search_query):
     search_engine = search_engine.lower()
     if search_engine == 'google':
         params["q"] = search_query
+        params['location'] = 'Ukraine'
+        params['google_domain'] = 'google.com.ua'
         search = GoogleSearch(params)
     elif search_engine == 'baidu':
         params["q"] = search_query
         search = BaiduSearch(params)
     elif search_engine == 'yandex':
         params["text"] = search_query
+        params['lr'] = 1
+        params['yandex_domain'] = 'yandex.ru'
+        params['lang'] = 'ru'
         search = YandexSearch(params)
     else:
         raise ValueError("Unsupported search engine. Choose from 'google', 'baidu', or 'yandex'.")
@@ -47,6 +52,8 @@ def get_search_results_serp(search_engine, search_query):
 
     if "error" in results:
         raise Exception(f"Error from SerpAPI: {results['error']}")
+    
+    # return results
 
     organic_results = results.get('organic_results', [])
     if not organic_results:
