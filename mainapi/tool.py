@@ -4,6 +4,7 @@ import requests
 from typing import Optional, Dict, Any
 import os
 from dotenv import load_dotenv
+from data.omelas.tools import tool_executor  # Import the tool_executor function
 
 # Load environment variables from .env file
 load_dotenv()
@@ -65,6 +66,9 @@ def enhanced_tool_executor(tool_name: str, tool_input: Dict[str, Any]) -> str:
         elif tool_name == "get_weather_condition":
             result = get_weather_condition(tool_input["location"])
             return json.dumps({"weather": result})
+        elif tool_name == "call_gbq_function": 
+            result = tool_executor(tool_name, tool_input)  
+            return json.dumps({"data": result})
         else:
             return json.dumps({"error": f"Unknown tool: {tool_name}"})
     except Exception as e:
@@ -213,7 +217,7 @@ def test_llm_tools():
     llm_handler = LLMHandler()
     
     # Define available tools
-    available_tools = [weather_tool, json_validator]
+    available_tools = [weather_tool, json_validator, tool_executor]
     
     # Test cases with different queries
     test_cases = [
@@ -224,6 +228,10 @@ def test_llm_tools():
         {
             "prompt": 'Is this valid JSON: {"name": "John", "age": 30}?',
             "system": "You are a helpful assistant. Consider using the JSON validator when asked about JSON format."
+        },
+        {
+            "prompt": 'who won the 2024 presidential election?',
+            "system": "You are a helpful assistant. Consider using the tool executor."
         },
     ]
     
