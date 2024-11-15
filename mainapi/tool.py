@@ -4,10 +4,16 @@ import requests
 from typing import Optional, Dict, Any
 import os
 from dotenv import load_dotenv
-from data.omelas.tools import tool_executor
+from utils import tool_executor, functions
 from data.omelas.worker import get_omelas_results
 from data_sources.search_scraper import get_search_and_scrape
 from mainapi.instructions import INSTRUCTIONS
+
+def _get_omelas_results(query):
+    return get_omelas_results(query)
+
+def _get_search_results(search_engine, search_query):
+    return get_search_and_scrape(search_engine=search_engine, search_query=search_query)
 
 # Define the function schemas
 json_validator = {
@@ -40,7 +46,7 @@ def enhanced_tool_executor(tool_name: str, tool_input: Dict[str, Any]) -> str:
         if tool_name == "validate_json":
             result = load_json(tool_input["json_str"])
             return json.dumps({"success": True, "result": result})
-        elif tool_name == "call_gbq_function": 
+        elif tool_name in ("get_omelas_results", "get_search_results"):
             result = tool_executor(tool_name, tool_input)  
             return json.dumps({"data": result})
         else:
@@ -96,9 +102,9 @@ class LLMHandler:
             # Make the API call
             response = requests.post(url, headers=headers, json=data)
             
-            # # Print raw response for debugging
-            # print("\nResponse status code:", response.status_code)
-            # print("Raw response:", response.text)
+            # Print raw response for debugging
+            print("\nResponse status code:", response.status_code)
+            print("Raw response:", response.text)
 
             # If the response is not JSON, return an error
             try:
@@ -183,9 +189,9 @@ class LLMHandler:
             }
 
         except requests.exceptions.RequestException as e:
-            return {'error': f"API request failed: {str(e)}"}
+            raise e
         except Exception as e:
-            return {'error': f"Unexpected error: {str(e)}", 'details': str(e)}
+            raise e
 
 def test_llm_tools():
     llm_handler = LLMHandler()
@@ -198,13 +204,15 @@ def test_llm_tools():
             "prompt": 'What are the biggest threats on the battlefield in Ukraine?',
         },
     ]
+
+    available_tools = [_get_omelas_results, _get_search_results]
     
     for i, test_case in enumerate(test_cases, 1):
         print(f"\nTest case {i}:")
         print(f"Prompt: {test_case['prompt']}")
         response = llm_handler._get_llm_response(
             prompt=test_case['prompt'],
-            functions=[get_search_and_scrape, get_omelas_results]
+            functions = functions
         )
         print(f"Final Response: {response.get('final_response', 'No final response available')}")
 
