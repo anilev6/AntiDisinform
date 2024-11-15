@@ -1,1 +1,1 @@
-# CLI bot
+# This is a chat bot

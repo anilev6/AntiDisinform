@@ -9,14 +9,16 @@ services:
     #   - MY_ID=${MY_ID}
     networks:
       - my-network
+    ports:
+      - "5000:8000"
   
-  # mainapi:
-  #   container_name: mainapi
-  #   build: ./mainapi
-  #   ports:
-  #     - "5000:5000"
-  #   networks:
-  #     - my-network
+  mainapi:
+    container_name: mainapi
+    build: ./mainapi
+    ports:
+      - "8000:8000"
+    networks:
+      - my-network
 
 networks:
   my-network:
