@@ -77,7 +77,7 @@ def get_anthropic_message_with_tools(system_instructions, prompt, functions=None
                 try:
                     tool_result = enhanced_tool_executor(tool_name, tool_input, tool_executor)
                     if tool_name == "call_gbq_function":
-                        if not tool_result.startswith("ERROR"):
+                        if not tool_result.startswith("ERROR") and len(tool_result) > 2:
                             return tool_result
                     is_error = True
 
