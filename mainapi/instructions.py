@@ -51,4 +51,5 @@ You are a veteran intelligence analyst with deep intellectual curiosity. Your ta
 
 ```
 
+**IMPORTANT**: CITE ALL YOUR CLAIMS WITH LINKS FROM THE DATA OBTAINED THROUGH THE FUNCTIONS YOU USED.
 """

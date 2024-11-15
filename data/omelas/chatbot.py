@@ -102,6 +102,7 @@ def get_anthropic_message_with_tools(system_instructions, prompt, functions=None
 
         if not found_tool_use:
             print("No function call found")
+            return content_blocks[0].text
             messages.append({
                 "role": "user",
                 "content": [{
