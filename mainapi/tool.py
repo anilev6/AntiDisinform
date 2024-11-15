@@ -3,7 +3,7 @@ import ast
 import requests
 from typing import Optional, Dict, Any
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from utils import tool_executor, functions
 from data.omelas.worker import get_omelas_results
 from data_sources.search_scraper import get_search_and_scrape
