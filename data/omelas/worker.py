@@ -2,7 +2,7 @@ from chatbot import get_anthropic_message_with_tools
 from instructions import DATA_DICTIONARY, QUERY_GEN
 from tools import functions, tool_executor
 
-def get_results(prompt):
+def get_omelas_results(prompt):
     """
     Returns the results from the Omelas Dabatabse based on prompt
     :param prompt:
