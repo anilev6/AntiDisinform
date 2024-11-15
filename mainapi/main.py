@@ -9,10 +9,16 @@ class TextRequest(BaseModel):
 class TextResponse(BaseModel):
     text: str
 
+# debug
+import logging
+logging.basicConfig(level=logging.INFO)    
+
 @app.post("/echo", response_model=TextResponse)
 async def echo_text(request: TextRequest):
     # Your logic here
     text = request.text
+    #debug
+    logging.info(text)
     
     return TextResponse(text=text)
 
