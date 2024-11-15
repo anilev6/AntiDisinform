@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "frontend"
+name = "tg_bot"
 version = "0.1.0"
 description = ""
 authors = ["anilev6 <125677472+anilev6@users.noreply.github.com>"]

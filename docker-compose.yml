@@ -1,12 +1,12 @@
 services:
   frontend:
     container_name: frontend
-    build: ./tg_bot
-    environment:
-      - MAINAPI_URL=http://mainapi:5000
-      - BOT_TOKEN=${BOT_TOKEN}
-      - BOT_NAME=${BOT_NAME}    
-      - MY_ID=${MY_ID}
+    build: ./frontend #./tg_bot
+    # environment:
+    #   - MAINAPI_URL=http://mainapi:5000
+    #   - BOT_TOKEN=${BOT_TOKEN}
+    #   - BOT_NAME=${BOT_NAME}    
+    #   - MY_ID=${MY_ID}
     networks:
       - my-network
   
