@@ -4,10 +4,10 @@ import requests
 from typing import Optional, Dict, Any
 import os
 from dotenv import load_dotenv
-from data.omelas.tools import tool_executor  # Import the tool_executor function
-
-# Load environment variables from .env file
-load_dotenv()
+from data.omelas.tools import tool_executor
+from data.omelas.worker import get_omelas_results
+from data_sources.search_scraper import get_search_and_scrape
+from mainapi.instructions import INSTRUCTIONS
 
 # Define the function schemas
 json_validator = {
@@ -25,29 +25,6 @@ json_validator = {
     }
 }
 
-weather_tool = {
-    "name": "get_weather_condition",
-    "description": "Get the weather condition for a specific location. Use this when asked about weather in any city.",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "location": {
-                "type": "string",
-                "description": "The location to get weather for"
-            }
-        },
-        "required": ["location"]
-    }
-}
-
-def get_weather_condition(location: str) -> str:
-    conditions = {
-        "New York": "Sunny",
-        "London": "Rainy",
-        "Tokyo": "Cloudy",
-        "Sydney": "Clear"
-    }
-    return conditions.get(location, "Weather condition data not available")
 
 def load_json(json_str: str) -> Any:
     try:
@@ -63,9 +40,6 @@ def enhanced_tool_executor(tool_name: str, tool_input: Dict[str, Any]) -> str:
         if tool_name == "validate_json":
             result = load_json(tool_input["json_str"])
             return json.dumps({"success": True, "result": result})
-        elif tool_name == "get_weather_condition":
-            result = get_weather_condition(tool_input["location"])
-            return json.dumps({"weather": result})
         elif tool_name == "call_gbq_function": 
             result = tool_executor(tool_name, tool_input)  
             return json.dumps({"data": result})
@@ -77,8 +51,8 @@ def enhanced_tool_executor(tool_name: str, tool_input: Dict[str, Any]) -> str:
 class LLMHandler:
     def _get_llm_response(
         self,
-        system_instructions: str,
         prompt: str,
+        system_instructions: str = INSTRUCTIONS,
         model: Optional[str] = None,
         functions: Optional[list] = None
     ) -> Dict[str, Any]:
@@ -217,21 +191,11 @@ def test_llm_tools():
     llm_handler = LLMHandler()
     
     # Define available tools
-    available_tools = [weather_tool, json_validator, tool_executor]
-    
+
     # Test cases with different queries
     test_cases = [
         {
-            "prompt": "What's the weather like in Tokyo?",
-            "system": "You are a helpful assistant. Consider using the weather tool when asked about weather conditions."
-        },
-        {
-            "prompt": 'Is this valid JSON: {"name": "John", "age": 30}?',
-            "system": "You are a helpful assistant. Consider using the JSON validator when asked about JSON format."
-        },
-        {
-            "prompt": 'who won the 2024 presidential election?',
-            "system": "You are a helpful assistant. Consider using the tool executor."
+            "prompt": 'What are the biggest threats on the battlefield in Ukraine?',
         },
     ]
     
@@ -239,9 +203,8 @@ def test_llm_tools():
         print(f"\nTest case {i}:")
         print(f"Prompt: {test_case['prompt']}")
         response = llm_handler._get_llm_response(
-            system_instructions=test_case['system'],
             prompt=test_case['prompt'],
-            functions=available_tools
+            functions=[get_search_and_scrape, get_omelas_results]
         )
         print(f"Final Response: {response.get('final_response', 'No final response available')}")
 

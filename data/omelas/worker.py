@@ -1,6 +1,6 @@
-from chatbot import get_anthropic_message_with_tools
-from instructions import DATA_DICTIONARY, QUERY_GEN
-from tools import functions, tool_executor
+from data.omelas.chatbot import get_anthropic_message_with_tools
+from data.omelas.instructions import DATA_DICTIONARY, QUERY_GEN
+from data.omelas.tools import functions, tool_executor
 
 def get_omelas_results(prompt):
     """
@@ -11,4 +11,4 @@ def get_omelas_results(prompt):
     return get_anthropic_message_with_tools(system_instructions=f"<instructions>{QUERY_GEN}</instructions><data_dict>{DATA_DICTIONARY}</data_dict>", prompt=prompt, functions=functions, tool_executor=tool_executor)
 
 if __name__ == "__main__":
-    print(get_results("What are Russian Telegram channels saying about the war in Ukraine?"))
+    print(get_omelas_results("What are Russian Telegram channels saying about the war in Ukraine?"))
