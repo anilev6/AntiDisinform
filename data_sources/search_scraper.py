@@ -58,7 +58,7 @@ def get_search_results_serp(search_engine, search_query):
 
     organic_results = results.get('organic_results', [])
     if not organic_results:
-        print("No organic results found.")
+        return
 
     fields_to_keep = ["link", "position", "snippet", "title", "source", "date"]
     filtered_results = []
@@ -84,7 +84,7 @@ def scrape_links_firecrawl(search_results):
 
     app = FirecrawlApp(api_key=api_key)
 
-    for result in search_results:
+    for result in search_results[:3]:
         url = result.get("link")
         if not url:
             continue  # Skip if no URL is present
@@ -112,9 +112,10 @@ def get_search_and_scrape(search_engine, search_query):
     - list: List of search results with scraped content.
     """
     search_results = get_search_results_serp(search_engine, search_query)
-    scraped_results = scrape_links_firecrawl(search_results)
+    print("Collecting website data")
+    scraped_results = scrape_links_firecrawl(search_results[:4])
     summarized_results = summarize_content_with_claude(scraped_results)
-    return summarized_results
+    return [{'url': r.get('link'), 'summary': r.get('summarized_content')} for r in summarized_results]
 
 def print_results(results):
     """
@@ -139,7 +140,8 @@ def summarize_content_with_claude(results):
     """
     client = anthropic.Anthropic()  # Defaults to ANTHROPIC_API_KEY from env
 
-    for result in results:
+    for result in results[:3]:
+        print(f'Summarizing {result.get("title")}')
         scraped_content = result.get("scraped_content")
         if not scraped_content or scraped_content == "Error during scraping":
             result["summarized_content"] = "No content to summarize"
@@ -150,8 +152,7 @@ def summarize_content_with_claude(results):
                 model="claude-3-5-haiku-20241022",
                 max_tokens=1024,
                 messages=[
-                    {"role": "user", "content": f"""Please summarize this article in about 3 paragraphs (200-500 words). 
-                    Retain as much key information as possible while removing redundancy:
+                    {"role": "user", "content": f"""Please summarize this article in three bullet points:
 
                     {scraped_content}"""}
                 ]

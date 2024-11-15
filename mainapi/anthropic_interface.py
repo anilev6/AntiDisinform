@@ -7,4 +7,7 @@ def call_system(prompt):
     return "#" + res.split("#", maxsplit=1)[-1]
 
 if __name__ == "__main__":
-    print(call_system("What are the biggest threats in the war in Ukraine?"))
+    import time
+    start_time = time.time()
+    print(call_system("What are the biggest threats in Ukraine right now?"))
+    print(f"Total time: {}")

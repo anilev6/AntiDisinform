@@ -42,7 +42,10 @@ def call_gbq_function(query):
     bigquery_client = initialize_bigquery_client()
     query_job = bigquery_client.query(query)
     try:
-        return [x for x in query_job.result()]
+        res = [x for x in query_job.result()]
+        if 'text' in res[0]:
+            for r in res:
+                r['text'] = r['text'][:1000]
     except InternalServerError as e:
         print(f"ERROR: {e}")
         time.sleep(2)
