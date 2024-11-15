@@ -26,7 +26,4 @@ RUN poetry build
 # Install the package itself
 RUN poetry install
 
-# # # Set the default command to be run in the container
-# CMD ["poetry", "run", "python", "frontend/main.py"]
-# Set the default command to launch the CLI
-ENTRYPOINT ["python", "frontend/main.py"]
+CMD ["poetry", "run", "python", "main.py"]
