@@ -1,5 +1,4 @@
-serpapi
+google-search-results
 firecrawl
 python-dotenv
-pprintpp
 pytest
