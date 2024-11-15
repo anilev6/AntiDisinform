@@ -1,21 +1,22 @@
 services:
-  fromntend:
+  frontend:
     container_name: frontend
-    build: ./frontend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mainapi
+    build: ./tg_bot
     environment:
-      - MAINAPI_URL=http://mainapi:5000
+      - MAINAPI_URL=http://mainapi:8000
+      - BOT_TOKEN=${BOT_TOKEN}
+      - BOT_NAME=${BOT_NAME}    
+      - MY_ID=${MY_ID}
     networks:
       - my-network
+    ports:
+      - "5000:8000"
   
   mainapi:
     container_name: mainapi
     build: ./mainapi
     ports:
-      - "5000:5000"
+      - "8000:8000"
     networks:
       - my-network
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Chatbot</title>
+</head>
+<body>
+    <h1>Simple Chatbot</h1>
+    <div id="chatbox">
+        <form action="http://mainapi:8000/echo" method="post">
+            <input type="text" id="user_input" name="user_input" placeholder="Say something..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        form.onsubmit = async e => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const userMessage = formData.get('user_input');
+            
+            // Append the user message to the chatbox
+            const chatbox = document.getElementById('chatbox');
+            chatbox.innerHTML += `<p>You: ${userMessage}</p>`;
+            
+            const response = await fetch('http://mainapi:8000/echo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: { text: userMessage }
+            });
+            const result = await response.json();
+            
+            // Append the bot's response to the chatbox
+            chatbox.innerHTML += `<p>Bot: ${result.text}</p>`;
+            
+            // Clear the input field
+            form.reset();
+        };
+    </script>
+</body>
+</html>
