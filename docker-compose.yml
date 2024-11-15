@@ -1,0 +1,14 @@
+services:
+  fromntend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mainapi
+    environment:
+      - MAINAPI_URL=http://mainapi:5000
+  
+  mainapi:
+    build: ./mainapi
+    ports:
+      - "5000:5000"
