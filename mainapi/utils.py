@@ -8,9 +8,10 @@ def tool_executor(function_name: str, function_args: Dict) -> str:
         print("Calling Omelas function")
         return str(get_omelas_results(query))
     if function_name == 'get_search_and_scrape':
-        query = function_args.get('query')
-        print("Calling Search Engine function")
-        return str(get_search_and_scrape(query))
+        search_query = function_args.get('search_query')
+        search_engine = function_args.get('search_engine')
+        print(f"Calling {search_engine} with query: {search_query}")
+        return str(get_search_and_scrape(search_engine=search_engine, search_query=search_query))
     raise ValueError(f"Unknown function: {function_name}, avaliable functions are: {', '.join([f['name'] for f in functions])}")
 
 
