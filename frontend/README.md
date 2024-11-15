@@ -1,1 +1,1 @@
-# This is a telegram bot
+# This is a chat bot
