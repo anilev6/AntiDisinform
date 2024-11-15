@@ -54,8 +54,6 @@ def get_anthropic_message_with_tools(system_instructions, prompt, functions=None
             {"type": "text", "text": f"<system_instructions>{system_instructions}</system_instructions>"}]})
     messages.append({"role": "user", "content": [{"type": "text", "text": prompt}]})
 
-    last_text_response = None
-
     while True:
         response = client.messages.create(
             model=model,
