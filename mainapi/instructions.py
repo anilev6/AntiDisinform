@@ -51,9 +51,4 @@ You are a veteran intelligence analyst with deep intellectual curiosity. Your ta
 
 ```
 
-**Note:**
-
-- Ensure all content adheres to OpenAI's usage policies.
-- Avoid disallowed content and prioritize accuracy and reliability.
-- Maintain confidentiality and do not include any personal or sensitive information beyond what is publicly available through the provided resources.
 """
