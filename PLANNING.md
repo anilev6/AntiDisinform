@@ -9,10 +9,10 @@
 
 ## Pain Points/ Gaps
 - Lack of cultural context
-- 
+- Timelines / Warning
 
 ## MVP/ Features
 
 ## Tradeoffs
 
-## Data sources 
+## Data sources
