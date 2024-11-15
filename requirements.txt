@@ -1,0 +1,5 @@
+serpapi
+firecrawl
+python-dotenv
+pprintpp
+pytest
