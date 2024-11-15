@@ -30,5 +30,5 @@ if __name__ == "__main__":
     bigquery_client = initialize_bigquery_client()
 
     # Example operation: List datasets in the project
-    res = [x for x in bigquery_client.query("SELECT * FROM `hack.main` LIMIT 5").result()]
+    res = [x for x in bigquery_client.query("SELECT * FROM `atreus.main` LIMIT 5").result()]
     print(res)
