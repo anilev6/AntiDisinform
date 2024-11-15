@@ -6,6 +6,7 @@ from serpapi import GoogleSearch, BaiduSearch, YandexSearch
 from firecrawl.firecrawl import FirecrawlApp
 from dotenv import load_dotenv
 from pprint import pprint
+import anthropic
 
 # Load environment variables from .env file
 load_dotenv()
@@ -112,7 +113,8 @@ def get_search_and_scrape(search_engine, search_query):
     """
     search_results = get_search_results_serp(search_engine, search_query)
     scraped_results = scrape_links_firecrawl(search_results)
-    return scraped_results
+    summarized_results = summarize_content_with_claude(scraped_results)
+    return summarized_results
 
 def print_results(results):
     """
@@ -124,6 +126,45 @@ def print_results(results):
     for result in results:
         pprint(result)
         print("\n" + "-"*80 + "\n")
+
+def summarize_content_with_claude(results):
+    """
+    Uses Claude 3.5 Sonnet to summarize the scraped content for each search result.
+
+    Parameters:
+    - results (list): List of dictionaries containing search results with scraped content
+
+    Returns:
+    - list: Updated results with summarized content added
+    """
+    client = anthropic.Anthropic()  # Defaults to ANTHROPIC_API_KEY from env
+
+    for result in results:
+        scraped_content = result.get("scraped_content")
+        if not scraped_content or scraped_content == "Error during scraping":
+            result["summarized_content"] = "No content to summarize"
+            continue
+
+        try:
+            message = client.messages.create(
+                model="claude-3-5-haiku-20241022",
+                max_tokens=1024,
+                messages=[
+                    {"role": "user", "content": f"""Please summarize this article in about 3 paragraphs (200-500 words). 
+                    Retain as much key information as possible while removing redundancy:
+
+                    {scraped_content}"""}
+                ]
+            )
+            result["summarized_content"] = message.content[0].text
+        except Exception as e:
+            print(f"Error summarizing content: {e}")
+            result["summarized_content"] = "Error during summarization"
+
+        # Optional: Add delay between API calls
+        time.sleep(1)
+
+    return results
 
 #%%
 
@@ -141,3 +182,4 @@ if __name__ == "__main__":
     main()
 
 # %%
+
