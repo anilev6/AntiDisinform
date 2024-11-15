@@ -1,5 +1,6 @@
 services:
   fromntend:
+    container_name: frontend
     build: ./frontend
     ports:
       - "3000:3000"
@@ -7,8 +8,17 @@ services:
       - mainapi
     environment:
       - MAINAPI_URL=http://mainapi:5000
+    networks:
+      - my-network
   
   mainapi:
+    container_name: mainapi
     build: ./mainapi
     ports:
       - "5000:5000"
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
