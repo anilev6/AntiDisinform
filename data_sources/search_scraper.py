@@ -141,7 +141,7 @@ def summarize_content_with_claude(results):
     client = anthropic.Anthropic()  # Defaults to ANTHROPIC_API_KEY from env
 
     for result in results[:3]:
-        print(f'Summarizing {result.get("title")}')
+        print(f'Collecting {result.get("title")}')
         scraped_content = result.get("scraped_content")
         if not scraped_content or scraped_content == "Error during scraping":
             result["summarized_content"] = "No content to summarize"

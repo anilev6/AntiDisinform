@@ -7,4 +7,8 @@ def call_system(prompt):
     return "#" + res.split("#", maxsplit=1)[-1]
 
 if __name__ == "__main__":
-    print(call_system("What are the biggest threats in Ukraine right now?"))
+    res = call_system("What's going on in the war in Ukraine over the past three days?'")
+    print("\n\n")
+    print("-"*80)
+    print("\n\n")
+    print(res)
